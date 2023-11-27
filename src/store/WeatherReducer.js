@@ -1,21 +1,22 @@
 // weatherReducer.js
 const initialState = {
-  city: "", // Thêm city vào initialState
-  infor: null,
+  city: "",
   latID: "",
   lonID: "",
   sevendays: null,
   sevenDayFeelsLike: [],
   sevenDayTemp: [],
-  sevenDayHumidity: []
+  sevenDayHumidity: [],
+  sevenDayTemp_Min: [],
+  sevenDayTemp_Max: [],
+  sevenDayPressure: [],
+  currentDayWeather: null,
 };
 
 const weatherReducer = (state = initialState, action) => {
   switch (action.type) {
     case "SET_CITY":
       return { ...state, city: action.payload };
-    case "SET_INFOR":
-      return { ...state, infor: action.payload };
     case "SET_LAT_ID":
       return { ...state, latID: action.payload };
     case "SET_LON_ID":
@@ -28,6 +29,14 @@ const weatherReducer = (state = initialState, action) => {
       return { ...state, sevenDayTemp: action.payload };
     case "SET_HUMIDITY":
       return { ...state, sevenDayHumidity: action.payload };
+    case "SET_SEVENDAYTEMP_MIN":
+      return { ...state, sevenDayTemp_Min: action.payload };
+    case "SET_SEVENDAYTEMP_MAX":
+      return { ...state, sevenDayTemp_Max: action.payload };
+    case "SET_SEVENDAYPRESSURE":
+      return { ...state, sevenDayPressure: action.payload };
+      case "SET_CURRENTDAYWEATHER":
+        return { ...state, currentDayWeather: action.payload };
     default:
       return state;
   }

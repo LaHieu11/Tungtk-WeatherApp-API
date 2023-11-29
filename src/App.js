@@ -7,26 +7,17 @@ import Today from "./components/Today";
 import Week from "./components/Week";
 import Chart from "./components/Chart";
 import GetLatAndLonFromAPI from "./GetLatAndLonFromAPI";
+import Login from "./pages/Login/Login";
+function App() {
+  return (
+    <BrowserRouter>
+      <Login/>
+      {/* <div style={{ height: "100vh", backgroundColor: "#d6d7da", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <Home/>
+      </div> */}
+    </BrowserRouter>
 
-  function App() {
-    return (
-      <BrowserRouter>
-        <div >
-          
-          <Home />
-          {/* <Row>
-          <Col>
-            <Routes>
-              <Route path="/today" element={<Today />} />
-              <Route path="/week" element={<Week />} />
-              <Route path="/chart" element={<Chart />} />
-            </Routes>
-          </Col>
-        </Row> */}
-        </div>
-      </BrowserRouter>
-
-    );
-  }
+  );
+}
 
 export default App;

@@ -4,7 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import "./Home.css"; // Import your custom CSS file
 import { useDispatch, useSelector } from "react-redux";
-
+import { WiDaySunny, WiThermometer, WiDayWindy, WiSunrise, WiSunset, WiHumidity, WiBarometer, WiThermometerExterior } from "weather-icons-react";
 
 export default function Home() {
     const [activeLink, setActiveLink] = useState(0);
@@ -190,40 +190,42 @@ export default function Home() {
     //         </ul>
     //     </div>
     // );
-   
+
     return (
-        <Container>
+        <Container style={{ height: "90vh" }}>
             <Row>
                 <Col className="side-bar" xs={3}>
-                    <div>
+                    <div style={{ width: "100%", height: "35px", display: "flex", justifyContent: "center" }}>
                         <input
+                            className="search-input"
                             type="text"
                             placeholder="Enter city name"
                             value={inputCity}
                             onChange={handleCityChange}
                             onKeyDown={handleEnterPress}
                         />
-                        <button onClick={handleSearch}>Search</button>
                     </div>
-                    <img
+                    {/* <img
                         style={{ height: "110px", width: "130px" }}
                         src="https://react-weather-app-762e5.web.app/img/Clear.png"
                         alt="Weather"
-                    />
-
-                    {currentDayWeather && currentDayWeather.main && currentDayWeather.weather && (
-                        <div>
-                            <h1 id="location">{currentDayWeather.name}</h1>
+                    /> */}
+                    <div>
+                        {currentDayWeather && currentDayWeather.main && currentDayWeather.weather && (
                             <div>
-                                <p>Ngày: {date}</p>
-                                <p>Giờ: {time}</p>
+                                <h1 id="location">{currentDayWeather.name}</h1>
+                                <h1 id="temperature">{(currentDayWeather.main.temp - 273.15).toFixed(1)} °C</h1>
+                                <div>
+                                    <p style={{ fontSize: "1.25rem" }}>{date}</p>
+                                    <p style={{ fontSize: "1.25rem" }}>{time}</p>
+                                </div>
+                                <h4 id="detail-weather"> {currentDayWeather.weather[0].description}</h4>
+                                <h4 id="clear-percent">Clear {currentDayWeather.clouds.all}%</h4>
                             </div>
-                            <h1 id="temperature">Nhiệt độ: {(currentDayWeather.main.temp - 273.15).toFixed(1)} °C</h1>
-                            <h4>Thời tiết: {currentDayWeather.weather[0].main}</h4>
-                            <h4 id="detail-weather">Description: {currentDayWeather.weather[0].description}</h4>
-                            <h4 id="clear-percent">Clear: {currentDayWeather.clouds.all}%</h4>
-                        </div>
-                    )}
+                        )}
+                    </div>
+
+
 
                 </Col>
 
@@ -241,22 +243,24 @@ export default function Home() {
                                     {currentDayWeather && currentDayWeather.main && currentDayWeather.weather && (
                                         <Col className="custom-col" xs={3}>
                                             <p style={{ fontSize: "1.25rem", color: "#bdbdcc" }}>Feels like</p>
-                                            <h1 id="uv-index">{(currentDayWeather.main.feels_like - 273.15).toFixed(1)}°C</h1>
+                                            <div style={{ width: "100%", display: "flex", justifyContent: "center" }}><WiThermometer size={60} color='#ffc518' /></div>
+                                            <h1 style={{ fontSize: "1.75rem", fontWeight: "700", width: "100%", display: "flex", justifyContent: "center", color: "#6c757d" }} id="uv-index">{(currentDayWeather.main.feels_like - 273.15).toFixed(1)}°C</h1>
                                         </Col>
                                     )}
 
                                     {currentDayWeather && currentDayWeather.main && currentDayWeather.weather && (
                                         <Col className="custom-col" xs={3}>
                                             <p style={{ fontSize: "1.25rem", color: "#bdbdcc" }}>Wind Status</p>
-                                            <h1 id="wind-status">{currentDayWeather.wind.speed} km/h</h1>
+                                            <div style={{ width: "100%", display: "flex", justifyContent: "center" }}><WiDayWindy size={60} color='#5f9ffd' /></div>
+                                            <h1 style={{ fontSize: "1.75rem", fontWeight: "700", width: "100%", display: "flex", justifyContent: "center", color: "#6c757d" }} id="wind-status">{currentDayWeather.wind.speed} km/h</h1>
                                         </Col>
                                     )}
 
                                     {currentDayWeather && currentDayWeather.main && currentDayWeather.weather && (
                                         <Col className="custom-col" xs={3}>
                                             <p style={{ fontSize: "1.25rem", color: "#bdbdcc" }}>Sunrise & Sunset</p>
-                                            <h1 id="sunrise">{convertTimestampToTime(currentDayWeather.sys.sunrise)}</h1>
-                                            <h1 id="sunset">{convertTimestampToTime(currentDayWeather.sys.sunset)}</h1>
+                                            <h1 style={{ fontSize: "1.5rem", fontWeight: "700", color: "#6c757d" }} id="sunrise"><WiSunrise size={50} color='#ffc518' />{convertTimestampToTime(currentDayWeather.sys.sunrise)}</h1>
+                                            <h1 style={{ fontSize: "1.5rem", fontWeight: "700", color: "#6c757d" }} id="sunset"> <WiSunset size={50} color='#ffc518' />{convertTimestampToTime(currentDayWeather.sys.sunset)}</h1>
                                         </Col>
                                     )}
 
@@ -265,21 +269,24 @@ export default function Home() {
                                     {currentDayWeather && currentDayWeather.main && currentDayWeather.weather && (
                                         <Col className="custom-col" xs={3}>
                                             <p style={{ fontSize: "1.25rem", color: "#bdbdcc" }}>Humidity</p>
-                                            <h1 id="huminity">{currentDayWeather.main.humidity}%</h1>
+                                            <div style={{ width: "100%", display: "flex", justifyContent: "center" }}><WiHumidity size={60} color='#5f9ffd' /></div>
+                                            <h1 style={{ fontSize: "1.75rem", fontWeight: "700", width: "100%", display: "flex", justifyContent: "center", color: "#6c757d" }} id="huminity">{currentDayWeather.main.humidity}%</h1>
                                         </Col>
                                     )}
 
                                     {currentDayWeather && currentDayWeather.main && currentDayWeather.weather && (
                                         <Col className="custom-col" xs={3}>
                                             <p style={{ fontSize: "1.25rem", color: "#bdbdcc" }}>Visibility</p>
-                                            <h1 id="visibility">{currentDayWeather.visibility / 1000} km</h1>
+                                            <div style={{ width: "100%", display: "flex", justifyContent: "center" }}><WiBarometer size={60} color='#ffc518' /></div>
+                                            <h1 style={{ fontSize: "1.75rem", fontWeight: "700", width: "100%", display: "flex", justifyContent: "center", color: "#6c757d" }} id="visibility">{currentDayWeather.visibility / 1000} km</h1>
                                         </Col>
                                     )}
 
                                     {currentDayWeather && currentDayWeather.main && currentDayWeather.weather && (
                                         <Col className="custom-col" xs={3}>
                                             <p style={{ fontSize: "1.25rem", color: "#bdbdcc" }}>Pressure</p>
-                                            <h1 id="pressure">{currentDayWeather.main.pressure} hPa</h1>
+                                            <div style={{ width: "100%", display: "flex", justifyContent: "center" }}><WiThermometerExterior size={60} color='#5f9ffd' /></div>
+                                            <h1 style={{ fontSize: "1.75rem", fontWeight: "700", width: "100%", display: "flex", justifyContent: "center", color: "#6c757d" }} id="pressure">{currentDayWeather.main.pressure} hPa</h1>
                                         </Col>
                                     )}
 
@@ -297,7 +304,7 @@ export default function Home() {
                                             xs={3}
                                             onClick={() => handleColClick(colIndex)}
                                         >
-                                            <p id={`date-day${colIndex}`} style={{ fontSize: "1rem", color: "#bdbdcc", color: "black" }}>
+                                            <p id={`date-day${colIndex}`} style={{ fontSize: "1rem", color: "rgb(0 0 0/26%)" }}>
                                                 {sevenDaydt_txt && sevenDaydt_txt.length > 0 && (
 
                                                     <p>{sevenDaydt_txt[colIndex]}</p>
@@ -319,17 +326,17 @@ export default function Home() {
                                 <Row className="detail-for-date" style={{ marginTop: "30px", width: "925px", height: "220px", backgroundColor: "#ffffff", borderRadius: "5px" }}>
                                     <div>
                                         <Row>
-                                            <p>{detailData.date}</p>
+                                            <p style={{ fontSize: "1.25rem", fontWeight: "600" }}>{detailData.date}</p>
 
                                         </Row>
                                         <Row>
-                                            <Col xs={6}>
-                                                <p>Temp current: {(detailData.tempCurrent -273.15).toFixed(1)} </p>
-                                                <p>Temp: {(detailData.tempMin -273.15).toFixed(1)} - {(detailData.tempMax - 273.15).toFixed(1)} </p>
+                                            <Col style={{ fontSize: "1rem", color: "#6c757d" }} xs={6}>
+                                                <p>Temp current: {(detailData.tempCurrent - 273.15).toFixed(1)} </p>
+                                                <p>Temp: {(detailData.tempMin - 273.15).toFixed(1)} - {(detailData.tempMax - 273.15).toFixed(1)} </p>
                                                 <p>Humidity: {detailData.humidity} </p>
                                                 <p>Wind speed: {detailData.windSpeed}</p>
                                             </Col>
-                                            <Col xs={6}>
+                                            <Col style={{ fontSize: "1rem", color: "#6c757d" }} xs={6}>
                                                 {currentDayWeather && currentDayWeather.main && currentDayWeather.weather && (
 
                                                     <div>

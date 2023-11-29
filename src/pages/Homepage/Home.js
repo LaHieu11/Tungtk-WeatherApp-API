@@ -2,21 +2,21 @@ import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-import "./Home.css"; // Import your custom CSS file
+import "./Home.css";
 import { useDispatch, useSelector } from "react-redux";
-import { WiDaySunny, WiThermometer, WiDayWindy, WiSunrise, WiSunset, WiHumidity, WiBarometer, WiThermometerExterior } from "weather-icons-react";
+import {
+    WiDaySunny, WiThermometer, WiDayWindy, WiSunrise, WiSunset, WiHumidity, WiBarometer, WiDayFog, WiThermometerExterior,
+    WiRain, WiCloudy, WiDayRainMix, WiDaySnow
+} from "weather-icons-react";
 
 export default function Home() {
     const [activeLink, setActiveLink] = useState(0);
     const [activeCol, setActiveCol] = useState(null);
     const [detailData, setDetailData] = useState({});
     const [inputCity, setInputCity] = useState("");
-
     const dispatch = useDispatch();
     const {
         city,
-        latID,
-        lonID,
         sevendays,
         sevenDayFeelsLike,
         sevenDayTemp,
@@ -191,6 +191,27 @@ export default function Home() {
     //     </div>
     // );
 
+    const getWeatherIcon = (description) => {
+        switch (description) {
+            case 'scattered clouds':
+                return <WiDaySunny />;
+            case 'broken clouds':
+                return <WiCloudy />;
+            case 'light rain':
+                return <WiDayRainMix />;
+            case 'overcast clouds':
+                return <WiDayFog />;
+            case 'light snow':
+                return <WiDaySnow />;
+            case 'few clouds':
+                return <WiHumidity/>
+            default:
+                return null;
+        }
+    };
+
+
+
     return (
         <Container style={{ height: "90vh" }}>
             <Row>
@@ -213,7 +234,10 @@ export default function Home() {
                     <div>
                         {currentDayWeather && currentDayWeather.main && currentDayWeather.weather && (
                             <div>
-                                <h1 id="location">{currentDayWeather.name}</h1>
+                                <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                                    {getWeatherIcon(currentDayWeather.weather[0].description)}
+                                </div>
+                                <h1 id="location">{currentDayWeather.name}</h1>               
                                 <h1 id="temperature">{(currentDayWeather.main.temp - 273.15).toFixed(1)} °C</h1>
                                 <div>
                                     <p style={{ fontSize: "1.25rem" }}>{date}</p>
@@ -296,33 +320,40 @@ export default function Home() {
                         <TabPanel>
                             {/* Content for Week */}
                             <div style={{ marginLeft: "35px" }}>
-                                <Row className="week-tab-row">
-                                    {[0, 1, 2, 3, 4, 5, 6, 7].map((colIndex) => (
-                                        <Col
-                                            key={colIndex}
-                                            className={`custom-col-2 ${activeCol === colIndex ? "active-col" : ""}`}
-                                            xs={3}
-                                            onClick={() => handleColClick(colIndex)}
-                                        >
-                                            <p id={`date-day${colIndex}`} style={{ fontSize: "1rem", color: "rgb(0 0 0/26%)" }}>
-                                                {sevenDaydt_txt && sevenDaydt_txt.length > 0 && (
+                                {sevendays && sevendays.list && sevendays.list.length > 0 && (
+                                    <Row className="week-tab-row">
+                                        {[0, 1, 2, 3, 4, 5, 6, 7].map((colIndex) => (
+                                            <Col
+                                                key={colIndex}
+                                                className={`custom-col-2 ${activeCol === colIndex ? "active-col" : ""}`}
+                                                xs={3}
+                                                onClick={() => handleColClick(colIndex)}
+                                            >
+                                                <p id={`date-day${colIndex}`} style={{ fontSize: "1rem", color: "rgb(0 0 0/26%)" }}>
+                                                    {sevenDaydt_txt && sevenDaydt_txt.length > 0 && (
+                                                        <p>{sevenDaydt_txt[colIndex]}</p>
+                                                    )}
+                                                </p>
 
-                                                    <p>{sevenDaydt_txt[colIndex]}</p>
-
-                                                )}
-                                            </p>
-                                            <p id={`temp-from-to${colIndex}`} style={{ fontSize: "1rem", color: "#68819c", fontWeight: "700" }}>
-                                                {sevenDayTemp_Min && sevenDayTemp_Min.length > 0 && sevenDayTemp_Max && sevenDayTemp_Max.length > 0 && (
-                                                    <div>
-                                                        <p>{(sevenDayTemp_Min[colIndex] - 273.15).toFixed(1)}° - {(sevenDayTemp_Max[colIndex] - 273.15).toFixed(1)}°</p>
+                                                {/* Display weather icon based on the description */}
+                                                {sevendays.list[colIndex].weather && (
+                                                    <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                                                        {getWeatherIcon(sevendays.list[colIndex].weather[0].description)}
                                                     </div>
                                                 )}
-                                            </p>
 
+                                                <p id={`temp-from-to${colIndex}`} style={{ fontSize: "1rem", color: "#68819c", fontWeight: "700" }}>
+                                                    {sevenDayTemp_Min && sevenDayTemp_Min.length > 0 && sevenDayTemp_Max && sevenDayTemp_Max.length > 0 && (
+                                                        <div>
+                                                            <p>{(sevenDayTemp_Min[colIndex] - 273.15).toFixed(1)}° - {(sevenDayTemp_Max[colIndex] - 273.15).toFixed(1)}°</p>
+                                                        </div>
+                                                    )}
+                                                </p>
+                                            </Col>
+                                        ))}
 
-                                        </Col>
-                                    ))}
-                                </Row>
+                                    </Row>
+                                )};
                                 <Row className="detail-for-date" style={{ marginTop: "30px", width: "925px", height: "220px", backgroundColor: "#ffffff", borderRadius: "5px" }}>
                                     <div>
                                         <Row>

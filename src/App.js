@@ -6,11 +6,13 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Today from "./components/Today";
 import Week from "./components/Week";
 import Chart from "./components/Chart";
+import GetLatAndLonFromAPI from "./GetLatAndLonFromAPI";
 
   function App() {
     return (
       <BrowserRouter>
-        <div style={{ height: "100vh", backgroundColor: "#d6d7da", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <div >
+          
           <Home />
           {/* <Row>
           <Col>

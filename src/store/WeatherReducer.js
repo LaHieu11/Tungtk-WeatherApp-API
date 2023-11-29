@@ -11,6 +11,12 @@ const initialState = {
   sevenDayTemp_Max: [],
   sevenDayPressure: [],
   currentDayWeather: null,
+  sevenDaydt_txt: [],
+  sevenDayWindSpeed: [],
+  sevenDaySunrise: [],
+  sevenDaySunset: [],
+  sevenDayWeatherDescription: [],
+ 
 };
 
 const weatherReducer = (state = initialState, action) => {
@@ -35,8 +41,18 @@ const weatherReducer = (state = initialState, action) => {
       return { ...state, sevenDayTemp_Max: action.payload };
     case "SET_SEVENDAYPRESSURE":
       return { ...state, sevenDayPressure: action.payload };
-      case "SET_CURRENTDAYWEATHER":
-        return { ...state, currentDayWeather: action.payload };
+    case "SET_CURRENTDAYWEATHER":
+      return { ...state, currentDayWeather: action.payload };
+    case "SET_SEVENDAYDT_TXT":
+      return { ...state, sevenDaydt_txt: action.payload };
+    case "SET_SEVENDAYWINDSPEED":
+      return { ...state, sevenDayWindSpeed: action.payload };
+    case "SET_SEVENDAYSUNRISE":
+      return { ...state, sevenDaySunrise: action.payload };
+    case "SET_SEVENDAYSUNSET":
+      return { ...state, sevenDaySunset: action.payload };
+    case "SET_SEVENDAYWEATHERDESCRIPTION":
+      return { ...state, sevenDayWeatherDescription: action.payload };
     default:
       return state;
   }

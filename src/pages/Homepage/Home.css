@@ -1,3 +1,7 @@
+* {
+    font-family: "Poppins", sans-serif;
+}
+
 .side-bar {
     background-color: #ffffff;
     display: block;
@@ -45,7 +49,7 @@
     height: 190px;
     width: 290px;
     background-color: #ffffff;
-        /* display: flex;
+    /* display: flex;
         align-items: center; */
 }
 
@@ -75,19 +79,25 @@
 
 #location {
     font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
 }
 
 #temperature {
     font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
 }
 
 #detail-weather {
     font-size: 1rem;
     color: #6c757d;
     text-transform: capitalize !important;
+    text-align: center;
 }
 
 #clear-percent {
     font-size: 1rem;
     color: #6c757d;
+    text-align: center;
 }

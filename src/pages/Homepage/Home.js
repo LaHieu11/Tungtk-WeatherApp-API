@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, PureComponent } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import "./Home.css";
 import { useDispatch, useSelector } from "react-redux";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
     WiDaySunny, WiThermometer, WiDayWindy, WiSunrise, WiSunset, WiHumidity, WiBarometer, WiDayFog, WiThermometerExterior,
     WiRain, WiCloudy, WiDayRainMix, WiDaySnow
 } from "weather-icons-react";
+import Chart from "../../components/Chart";
+import TwoLineChart from "../../components/Chart";
 
 export default function Home() {
     const [activeLink, setActiveLink] = useState(0);
@@ -76,6 +79,75 @@ export default function Home() {
 
         // }
     }, [city, dispatch, inputCity]);
+    const [chartSize, setChartSize] = useState({ width: 900, height: 500 });
+    const data = [
+        {
+            name: 'Monday',
+            Temparature: 11,
+            FeelLike: 15,
+            amt: 100,
+        },
+        {
+            name: 'Tuesday',
+            Temparature: 21,
+            FeelLike: 23,
+            amt: 100,
+        },
+        {
+            name: 'Wednesday',
+            Temparature: 22,
+            FeelLike: 11,
+            amt: 100,
+        },
+        {
+            name: 'Thursday',
+            Temparature: 15,
+            FeelLike: 21,
+            amt: 100,
+        },
+        {
+            name: 'Friday',
+            Temparature: 22,
+            FeelLike: 23,
+            amt: 100,
+        },
+        {
+            name: 'Saturday',
+            Temparature: 26,
+            FeelLike: 17,
+            amt: 100,
+        },
+        {
+            name: 'Sunday',
+            Temparature: 23,
+            FeelLike: 19,
+            amt: 100,
+        },
+    ];
+
+
+    useEffect(() => {
+        // Cập nhật kích thước của biểu đồ khi kích thước của thẻ div thay đổi
+        const updateChartSize = () => {
+            const container = document.getElementById('chart-container');
+            if (container) {
+                const { width, height } = container.getBoundingClientRect();
+                setChartSize({ width, height });
+            }
+        };
+
+        // Gắn sự kiện resize để theo dõi thay đổi kích thước
+        window.addEventListener('resize', updateChartSize);
+
+        // Gọi hàm cập nhật kích thước lần đầu tiên
+        updateChartSize();
+
+        // Loại bỏ sự kiện resize khi component unmount
+        return () => {
+            window.removeEventListener('resize', updateChartSize);
+        };
+    }, []);
+
 
     // Trong useEffect xử lý dữ liệu 7 ngày
     useEffect(() => {
@@ -114,10 +186,36 @@ export default function Home() {
         }
     }, [sevendays, dispatch]);
 
+    const [tabStyles, setTabStyles] = useState([
+        { color: "#707880", textDecoration: "none" },
+        { color: "#707880", textDecoration: "none" },
+        { color: "#707880", textDecoration: "none" },
+    ]);
 
 
     const handleTabSelect = (index) => {
         setActiveLink(index);
+
+        // Tạo một bản sao mới của mảng styles
+        const newTabStyles = [...tabStyles];
+
+        // Đặt màu và gạch chân cho tab được chọn
+        newTabStyles.forEach((style, i) => {
+            if (i === index) {
+                style.color = "black";
+                style.textDecoration = "underline";
+                style.backgroundColor = "transparent";
+                style.border = "none";
+            } else {
+                style.color = "#707880";
+                style.textDecoration = "none";
+                style.backgroundColor = "transparent";
+                style.border = "none";
+            }
+        });
+
+        // Cập nhật state tabStyles
+        setTabStyles(newTabStyles);
     };
 
     const handleColClick = (colIndex) => {
@@ -194,17 +292,35 @@ export default function Home() {
     const getWeatherIcon = (description) => {
         switch (description) {
             case 'scattered clouds':
-                return <WiDaySunny />;
+                return <WiDaySunny size={50} color='#ffc518' />;
             case 'broken clouds':
-                return <WiCloudy />;
+                return <WiCloudy size={50} color='#ffc518' />;
             case 'light rain':
-                return <WiDayRainMix />;
+                return <WiDayRainMix size={50} color='#ffc518' />;
             case 'overcast clouds':
-                return <WiDayFog />;
+                return <WiDayFog size={50} color='#ffc518' />;
             case 'light snow':
-                return <WiDaySnow />;
+                return <WiDaySnow size={50} color='#ffc518' />;
             case 'few clouds':
-                return <WiHumidity/>
+                return <WiHumidity size={50} color='#ffc518' />
+            default:
+                return null;
+        }
+    };
+    const getWeatherIcon2 = (description) => {
+        switch (description) {
+            case 'scattered clouds':
+                return <WiDaySunny size={200} color='#ffc518' />;
+            case 'broken clouds':
+                return <WiCloudy size={200} color='#ffc518' />;
+            case 'light rain':
+                return <WiDayRainMix size={200} color='#ffc518' />;
+            case 'overcast clouds':
+                return <WiDayFog size={200} color='#ffc518' />;
+            case 'light snow':
+                return <WiDaySnow size={200} color='#ffc518' />;
+            case 'few clouds':
+                return <WiHumidity size={200} color='#ffc518' />
             default:
                 return null;
         }
@@ -226,39 +342,34 @@ export default function Home() {
                             onKeyDown={handleEnterPress}
                         />
                     </div>
-                    {/* <img
-                        style={{ height: "110px", width: "130px" }}
-                        src="https://react-weather-app-762e5.web.app/img/Clear.png"
-                        alt="Weather"
-                    /> */}
-                    <div>
+                    <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
                         {currentDayWeather && currentDayWeather.main && currentDayWeather.weather && (
                             <div>
-                                <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-                                    {getWeatherIcon(currentDayWeather.weather[0].description)}
+                                <div style={{ marginTop: "30px", width: "100%", display: "flex", justifyContent: "center" }}>
+                                    {getWeatherIcon2(currentDayWeather.weather[0].description)}
                                 </div>
-                                <h1 id="location">{currentDayWeather.name}</h1>               
+                                <h1 id="location">{currentDayWeather.name}</h1>
                                 <h1 id="temperature">{(currentDayWeather.main.temp - 273.15).toFixed(1)} °C</h1>
                                 <div>
-                                    <p style={{ fontSize: "1.25rem" }}>{date}</p>
-                                    <p style={{ fontSize: "1.25rem" }}>{time}</p>
+                                    <p style={{ textAlign: "center", fontSize: "1.25rem" }}>{date}</p>
+                                    <p style={{ textAlign: "center", fontSize: "1.25rem" }}>{time}</p>
                                 </div>
                                 <h4 id="detail-weather"> {currentDayWeather.weather[0].description}</h4>
                                 <h4 id="clear-percent">Clear {currentDayWeather.clouds.all}%</h4>
+                                <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                                    <img style={{ borderRadius: "5px", width: "90%" }} src="https://us.123rf.com/450wm/macrovector/macrovector1805/macrovector180500152/100615959-weather-forecast-web-page-with-heavy-rain-on-dark-cloudy-day-with-people-under-umbrellas-vector-illu.jpg?ver=6" />
+                                </div>
                             </div>
                         )}
                     </div>
-
-
-
                 </Col>
 
                 <Col className="content" xs={9}>
                     <Tabs onSelect={handleTabSelect} selectedIndex={activeLink}>
                         <TabList className="menu-list">
-                            <Tab style={{ color: "#707880", fontSize: "25px", fontWeight: "600", display: "inline-block" }}>Today</Tab>
-                            <Tab style={{ color: "#707880", fontSize: "25px", fontWeight: "600", display: "inline-block" }}>Week</Tab>
-                            <Tab style={{ color: "#707880", fontSize: "25px", fontWeight: "600", display: "inline-block" }}>Chart</Tab>
+                            <Tab style={{ ...tabStyles[0], fontSize: "25px", fontWeight: "600", display: "inline-block" }}>Today</Tab>
+                            <Tab style={{ ...tabStyles[1], fontSize: "25px", fontWeight: "600", display: "inline-block" }}>Week</Tab>
+                            <Tab style={{ ...tabStyles[2], fontSize: "25px", fontWeight: "600", display: "inline-block" }}>Chart</Tab>
                         </TabList>
 
                         <TabPanel>
@@ -353,10 +464,10 @@ export default function Home() {
                                         ))}
 
                                     </Row>
-                                )};
+                                )}
                                 <Row className="detail-for-date" style={{ marginTop: "30px", width: "925px", height: "220px", backgroundColor: "#ffffff", borderRadius: "5px" }}>
                                     <div>
-                                        <Row>
+                                        <Row style={{ marginTop: "15px" }}>
                                             <p style={{ fontSize: "1.25rem", fontWeight: "600" }}>{detailData.date}</p>
 
                                         </Row>
@@ -386,8 +497,17 @@ export default function Home() {
                             </div>
                         </TabPanel>
                         <TabPanel>
-                            {/* Content for Chart */}
-                            <div>Content for Chart</div>
+                            <div id="chart-container" style={{ width: '100%', height: '100%', marginTop:"80px" }}>
+                                <LineChart width={chartSize.width} height={chartSize.height} data={data}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="name" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Line type="monotone" dataKey="Temparature" stroke="#8884d8" activeDot={{ r: 8 }} />
+                                    <Line type="monotone" dataKey="FeelLike" stroke="#82ca9d" activeDot={{ r: 8 }} />
+                                </LineChart>
+                            </div>
                         </TabPanel>
                     </Tabs>
                     {/* ... your existing code ... */}

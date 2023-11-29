@@ -124,8 +124,14 @@ export default function Home() {
             amt: 100,
         },
     ];
-
-
+    let transformedChartData = [];
+    if (sevendays && sevendays.list) {
+        transformedChartData = sevendays.list.map((item, index) => ({
+        name: sevenDaydt_txt[index],
+        Temperature: (sevenDayTemp[index] -273.15).toFixed(1),
+        windSpeed: (sevenDayWindSpeed[index] ).toFixed(1)
+    }))
+}
     useEffect(() => {
         // Cập nhật kích thước của biểu đồ khi kích thước của thẻ div thay đổi
         const updateChartSize = () => {
@@ -497,15 +503,18 @@ export default function Home() {
                             </div>
                         </TabPanel>
                         <TabPanel>
-                            <div id="chart-container" style={{ width: '100%', height: '100%', marginTop:"80px" }}>
-                                <LineChart width={chartSize.width} height={chartSize.height} data={data}>
+                            <div id="chart-container" style={{ width: '100%', height: '100%', marginTop: "80px" }}>
+                                <LineChart
+                                    width={chartSize.width}
+                                    height={chartSize.height}
+                                    data={transformedChartData}>
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis dataKey="name" />
                                     <YAxis />
                                     <Tooltip />
                                     <Legend />
-                                    <Line type="monotone" dataKey="Temparature" stroke="#8884d8" activeDot={{ r: 8 }} />
-                                    <Line type="monotone" dataKey="FeelLike" stroke="#82ca9d" activeDot={{ r: 8 }} />
+                                    <Line type="monotone" dataKey="Temperature" stroke="#8884d8" activeDot={{ r: 8 }} />
+                                    <Line type="monotone" dataKey="windSpeed" stroke="#82ca9d" activeDot={{ r: 8 }} />
                                 </LineChart>
                             </div>
                         </TabPanel>

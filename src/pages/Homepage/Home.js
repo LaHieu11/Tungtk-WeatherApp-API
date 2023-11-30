@@ -34,7 +34,6 @@ export default function Home() {
 
     } = useSelector((state) => state);
     useEffect(() => {
-        // Khi giá trị của city thay đổi, gọi API để cập nhật dữ liệu
         if (city) {
             fetch(
                 `https://api.openweathermap.org/data/2.5/weather?q=${inputCity}&appid=a3095f77e7b58c2de9fa5d42f07ac72e`
@@ -50,7 +49,6 @@ export default function Home() {
         if (currentDayWeather && currentDayWeather.coord) {
             const { lat, lon } = currentDayWeather.coord;
 
-            // Dispatch action để cập nhật store với dữ liệu mới
             dispatch({ type: "SET_LAT_ID", payload: lat });
             dispatch({ type: "SET_LON_ID", payload: lon });
         }
@@ -58,82 +56,36 @@ export default function Home() {
 
     //--------------------------------------------------------------------------------------------------------------------
     useEffect(() => {
-        // Khi giá trị của city thay đổi, gọi API để cập nhật dữ liệu
         if (city) {
             fetch(
                 `https://api.openweathermap.org/data/2.5/forecast?q=${inputCity}&cnt=8&appid=a3095f77e7b58c2de9fa5d42f07ac72e`
             )
                 .then((res) => res.json())
                 .then((data) => {
-                    // Dispatch action để cập nhật store với dữ liệu mới
                     dispatch({ type: "SET_SEVEN_DAYS", payload: data });
                 });
         }
-        // if(currentDayWeather && currentDayWeather.list.length >0){
-        //     let sunrise;
-        //     let sunset;
-
-        //     sunrise = currentDayWeather.sys.sunrise;
-        //     sunset = currentDayWeather.sys.sunset; 
-
-
-        // }
     }, [city, dispatch, inputCity]);
     const [chartSize, setChartSize] = useState({ width: 900, height: 500 });
-    const data = [
-        {
-            name: 'Monday',
-            Temparature: 11,
-            FeelLike: 15,
-            amt: 100,
-        },
-        {
-            name: 'Tuesday',
-            Temparature: 21,
-            FeelLike: 23,
-            amt: 100,
-        },
-        {
-            name: 'Wednesday',
-            Temparature: 22,
-            FeelLike: 11,
-            amt: 100,
-        },
-        {
-            name: 'Thursday',
-            Temparature: 15,
-            FeelLike: 21,
-            amt: 100,
-        },
-        {
-            name: 'Friday',
-            Temparature: 22,
-            FeelLike: 23,
-            amt: 100,
-        },
-        {
-            name: 'Saturday',
-            Temparature: 26,
-            FeelLike: 17,
-            amt: 100,
-        },
-        {
-            name: 'Sunday',
-            Temparature: 23,
-            FeelLike: 19,
-            amt: 100,
-        },
-    ];
+
     let transformedChartData = [];
-    if (sevendays && sevendays.list) {
-        transformedChartData = sevendays.list.map((item, index) => ({
-        name: sevenDaydt_txt[index],
-        Temperature: (sevenDayTemp[index] -273.15).toFixed(1),
-        windSpeed: (sevenDayWindSpeed[index] ).toFixed(1)
-    }))
-}
+
+    if (sevendays && sevendays.list && sevendays.list.length > 0) {
+
+        transformedChartData = sevendays.list.map((item, index) => {
+
+            // Kiểm tra xem có dữ liệu không
+            let temperature = sevenDayTemp[index] ? (sevenDayTemp[index] - 273.15).toFixed(1) : 0;
+
+            return {
+                name: sevenDaydt_txt[index],
+                Temperature: temperature,
+                windSpeed: (sevenDayWindSpeed[index] ?? 0).toFixed(1)
+            }
+        })
+
+    }
     useEffect(() => {
-        // Cập nhật kích thước của biểu đồ khi kích thước của thẻ div thay đổi
         const updateChartSize = () => {
             const container = document.getElementById('chart-container');
             if (container) {
@@ -142,20 +94,17 @@ export default function Home() {
             }
         };
 
-        // Gắn sự kiện resize để theo dõi thay đổi kích thước
         window.addEventListener('resize', updateChartSize);
 
-        // Gọi hàm cập nhật kích thước lần đầu tiên
         updateChartSize();
 
-        // Loại bỏ sự kiện resize khi component unmount
         return () => {
             window.removeEventListener('resize', updateChartSize);
         };
     }, []);
 
 
-    // Trong useEffect xử lý dữ liệu 7 ngày
+
     useEffect(() => {
         if (sevendays && sevendays.list && sevendays.list.length > 0) {
             // ------------------------------
@@ -226,8 +175,6 @@ export default function Home() {
 
     const handleColClick = (colIndex) => {
         setActiveCol(colIndex);
-        // Thực hiện logic cập nhật dữ liệu cho detail-for-date dựa trên colIndex
-        // Ví dụ:
         setDetailData({
             date: sevenDaydt_txt[colIndex],
             tempCurrent: sevenDayTemp[colIndex],
@@ -251,7 +198,6 @@ export default function Home() {
     };
 
     const handleEnterPress = (event) => {
-        // Check if the pressed key is Enter (key code 13)
         if (event.key === "Enter") {
             handleSearch();
         }
@@ -281,19 +227,6 @@ export default function Home() {
     const date = currentDateTime.toLocaleDateString();
     const time = currentDateTime.toLocaleTimeString();
 
-    //----lấy ngày
-    // const EightDaysForecast = ({ dates }) => (
-    //     <div>
-    //         <ul>
-    //             {dates.map((date, index) => (
-    //                 <li key={index}>
-    //                     <p>Thứ {date.toLocaleDateString("en-US", { weekday: "long" })}</p>
-    //                     <p>Ngày {date.toLocaleDateString()}</p>
-    //                 </li>
-    //             ))}
-    //         </ul>
-    //     </div>
-    // );
 
     const getWeatherIcon = (description) => {
         switch (description) {
@@ -435,7 +368,6 @@ export default function Home() {
                             </div>
                         </TabPanel>
                         <TabPanel>
-                            {/* Content for Week */}
                             <div style={{ marginLeft: "35px" }}>
                                 {sevendays && sevendays.list && sevendays.list.length > 0 && (
                                     <Row className="week-tab-row">
@@ -452,7 +384,7 @@ export default function Home() {
                                                     )}
                                                 </p>
 
-                                                {/* Display weather icon based on the description */}
+                                               
                                                 {sevendays.list[colIndex].weather && (
                                                     <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
                                                         {getWeatherIcon(sevendays.list[colIndex].weather[0].description)}
@@ -519,7 +451,6 @@ export default function Home() {
                             </div>
                         </TabPanel>
                     </Tabs>
-                    {/* ... your existing code ... */}
                 </Col>
             </Row>
         </Container>

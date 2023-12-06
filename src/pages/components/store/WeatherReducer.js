@@ -1,6 +1,8 @@
 // weatherReducer.js
+import * as actionTypes from './weatherActions';
 const initialState = {
   city: "",
+  inputCity: "",
   latID: "",
   lonID: "",
   sevendays: null,
@@ -16,13 +18,15 @@ const initialState = {
   sevenDaySunrise: [],
   sevenDaySunset: [],
   sevenDayWeatherDescription: [],
- 
+
 };
 
 const weatherReducer = (state = initialState, action) => {
   switch (action.type) {
     case "SET_CITY":
       return { ...state, city: action.payload };
+    case "SET_INPUT_CITY":
+      return { ...state, inputCity: action.payload };
     case "SET_LAT_ID":
       return { ...state, latID: action.payload };
     case "SET_LON_ID":

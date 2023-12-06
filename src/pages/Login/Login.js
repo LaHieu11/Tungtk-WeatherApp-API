@@ -48,21 +48,9 @@ export default function App() {
       console.error(error);
     }
   };
-
-  const handleToggle = (isSignIn) => {
-    if (containerRef.current) {
-      if (isSignIn) {
-        containerRef.current.classList.remove("sign-up-mode");
-      } else {
-        containerRef.current.classList.add("sign-up-mode");
-      }
-    }
-  };
-
   return (
     <div className="container" ref={containerRef}>
       {/* ... Form Sign Up ... */}
-
       <div className="form-container sign-in">
         <Form>
           <h1>Sign In</h1>

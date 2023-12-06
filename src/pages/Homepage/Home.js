@@ -17,6 +17,7 @@ export default function Home() {
     const [activeCol, setActiveCol] = useState(null);
     const [detailData, setDetailData] = useState({});
     const [inputCity, setInputCity] = useState("");
+
     const dispatch = useDispatch();
     const {
         city,
@@ -249,17 +250,17 @@ export default function Home() {
     const getWeatherIcon2 = (description) => {
         switch (description) {
             case 'scattered clouds':
-                return <WiDaySunny size={200} color='#ffc518' />;
+                return <WiDaySunny size={150} color='#ffc518' />;
             case 'broken clouds':
-                return <WiCloudy size={200} color='#ffc518' />;
+                return <WiCloudy size={150} color='#ffc518' />;
             case 'light rain':
-                return <WiDayRainMix size={200} color='#ffc518' />;
+                return <WiDayRainMix size={150} color='#ffc518' />;
             case 'overcast clouds':
-                return <WiDayFog size={200} color='#ffc518' />;
+                return <WiDayFog size={150} color='#ffc518' />;
             case 'light snow':
-                return <WiDaySnow size={200} color='#ffc518' />;
+                return <WiDaySnow size={150} color='#ffc518' />;
             case 'few clouds':
-                return <WiHumidity size={200} color='#ffc518' />
+                return <WiHumidity size={150} color='#ffc518' />
             default:
                 return null;
         }
@@ -279,7 +280,10 @@ export default function Home() {
                             value={inputCity}
                             onChange={handleCityChange}
                             onKeyDown={handleEnterPress}
+                            pattern="^[A-Z][a-z]+\d*$"
+                            title="City name must start with an uppercase letter, followed by lowercase letters and optional digits."
                         />
+
                     </div>
                     <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
                         {currentDayWeather && currentDayWeather.main && currentDayWeather.weather && (
@@ -384,7 +388,7 @@ export default function Home() {
                                                     )}
                                                 </p>
 
-                                               
+
                                                 {sevendays.list[colIndex].weather && (
                                                     <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
                                                         {getWeatherIcon(sevendays.list[colIndex].weather[0].description)}

@@ -2,19 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import { Col } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import { WiDaySunny, WiCloudy, WiDayRainMix, WiDayFog, WiDaySnow, WiHumidity } from 'weather-icons-react';
+import { WiDaySunny, WiCloudy, WiDayRainMix, WiDayFog, WiDaySnow, WiHumidity, WiCloud } from 'weather-icons-react';
 import {setCurrentDayWeather, setCity, setInputCity} from './store/weatherActions'
-
+import { FaCloud } from "react-icons/fa";
 const WeatherToday = () => {
 
     const dispatch = useDispatch();
     const currentDayWeather = useSelector(state => state.currentDayWeather);
     const city = useSelector(state => state.city);
     const inputCity = useSelector(state => state.inputCity);
-    
+    const [isEnterKeyPressed, setIsEnterKeyPressed] = useState(false);
 
     useEffect(() => {
-        if (inputCity) {
+        if (inputCity && isEnterKeyPressed) {
             fetch(
                 `https://api.openweathermap.org/data/2.5/weather?q=${inputCity}&appid=a3095f77e7b58c2de9fa5d42f07ac72e`
             )
@@ -22,8 +22,10 @@ const WeatherToday = () => {
                 .then((data) => {
                     dispatch(setCurrentDayWeather(data));
                 });
+            setIsEnterKeyPressed(false);
         }
-    }, [inputCity]);
+    }, [inputCity, isEnterKeyPressed]);
+    
     
 
     const handleCityChange = (event) => {
@@ -31,11 +33,13 @@ const WeatherToday = () => {
     };
 
     const handleSearch = () => {
-        setInputCity(inputCity);
+        dispatch(setInputCity(inputCity));
     };
 
     const handleEnterPress = (event) => {
         if (event.key === "Enter") {
+            event.preventDefault();
+            setIsEnterKeyPressed(true);
             handleSearch();
         }
     };
@@ -78,7 +82,7 @@ const WeatherToday = () => {
             case 'light snow':
                 return <WiDaySnow size={200} color='#ffc518' />;
             case 'few clouds':
-                return <WiHumidity size={200} color='#ffc518' />
+                return <WiCloud size={200} color='#ffc518' />
             default:
                 return null;
         }
@@ -87,8 +91,8 @@ const WeatherToday = () => {
 
 
     return (
-        <Col className="side-bar" style={{marginLeft: '120px'}} xs={3}>
-            <div style={{ width: "220%", height: "35px", display: "flex", justifyContent: "center" }}>
+        <Col className="side-bar" style={{ width:"100%", marginBottom:"20px"}} xs={3}>
+            <div style={{ width: "100%%", height: "35px", display: "flex", justifyContent: "center", alignItems:"center", position:"relative", top:"10px" }}>
                 <input
                     className="search-input"
                     type="text"
